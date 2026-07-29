@@ -9,9 +9,16 @@
  * Usage:
  *   node tools/capture.mjs --shot=hero --out=shots/hero.png
  *   node tools/capture.mjs --shot=hero --out=shots/hero.png --w=2560 --h=1440
+ *   node tools/capture.mjs --shot=hero --q=medium --settle=8
  *   node tools/capture.mjs --list
+ *
+ * Environment:
+ *   CAPTURE_CHROME   absolute path to a Chromium binary, when the one bundled
+ *                    with the installed playwright is not the one you want
+ *                    (CI images that preinstall browsers at a pinned revision).
  */
 import { chromium } from 'playwright';
+import { platform } from 'node:os';
 import { spawn } from 'node:child_process';
 import { mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -60,10 +67,21 @@ async function ensureServer() {
 
 const server = await ensureServer();
 
+// Metal is the right ANGLE backend on macOS and a hard error anywhere else, so
+// only darwin pins one. Elsewhere Chromium picks: real GPU when the box has one,
+// SwiftShader when it does not (headless CI, containers). `unsafe-swiftshader`
+// only matters in that fallback — without it newer Chromium refuses to expose
+// WebGL over the software rasteriser and the harness dies on a null context.
+const angleArgs =
+  platform() === 'darwin'
+    ? ['--use-angle=metal']
+    : ['--enable-unsafe-swiftshader'];
+
 const browser = await chromium.launch({
   headless: true,
+  ...(process.env.CAPTURE_CHROME ? { executablePath: process.env.CAPTURE_CHROME } : {}),
   args: [
-    '--use-angle=metal',
+    ...angleArgs,
     '--enable-unsafe-webgpu',
     '--ignore-gpu-blocklist',
     '--enable-gpu-rasterization',
@@ -87,7 +105,8 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}\n${e.stack ?? ''
 
 let failed = null;
 try {
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1&shot=${encodeURIComponent(SHOT)}`, {
+  const quality = args.q ? `&q=${encodeURIComponent(args.q)}` : '';
+  await page.goto(`http://127.0.0.1:${PORT}/?capture=1${quality}&shot=${encodeURIComponent(SHOT)}`, {
     waitUntil: 'domcontentloaded',
     timeout: TIMEOUT,
   });
