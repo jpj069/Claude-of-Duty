@@ -27,6 +27,9 @@ const H = Number(args.h ?? 1080);
 const KIND = args.kind ?? 'wall';
 const OUT = resolve(args.out ?? `/tmp/fx-${KIND}.png`);
 const SETTLE = Number(args.settle ?? 90);
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 60000);
 
 const portOpen = (port) =>
   new Promise((res) => {
@@ -63,9 +66,9 @@ let failed = null;
 try {
   await page.goto(`http://127.0.0.1:${PORT}/src/fx/preview.html?kind=${encodeURIComponent(KIND)}${args.log ? '&log=1' : ''}`, {
     waitUntil: 'domcontentloaded',
-    timeout: 60000,
+    timeout: TIMEOUT,
   });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 60000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
   await page.evaluate(
     (n) =>
       new Promise((done) => {

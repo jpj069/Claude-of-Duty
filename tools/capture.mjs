@@ -119,7 +119,7 @@ try {
     );
 
     mkdirSync(dirname(OUT), { recursive: true });
-    await page.screenshot({ path: OUT, type: 'png' });
+    await page.screenshot({ path: OUT, type: 'png', timeout: TIMEOUT });
 
     const info = await page.evaluate('window.__RENDER_INFO__ ?? null');
     console.log(JSON.stringify({ ok: true, out: OUT, shot: SHOT, w: W, h: H, info }, null, 2));

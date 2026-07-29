@@ -23,6 +23,9 @@ const W = Number(args.w ?? 1600);
 const H = Number(args.h ?? 900);
 const VIEW = args.view ?? 'board';
 const OUT = resolve(args.out ?? `/tmp/mat-${VIEW}.png`);
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 60000);
 const ROOT = resolve(import.meta.dirname, '../..');
 
 const portOpen = (port) =>
@@ -60,9 +63,9 @@ try {
   const extra = (args.m ? `&m=${encodeURIComponent(args.m)}` : '') + (args.dbg ? `&dbg=${args.dbg}` : '');
   await page.goto(`http://127.0.0.1:${PORT}/src/materials/preview.html?view=${VIEW}${extra}`, {
     waitUntil: 'domcontentloaded',
-    timeout: 60000,
+    timeout: TIMEOUT,
   });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 60000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
   await page.evaluate(
     () =>
       new Promise((d) => {

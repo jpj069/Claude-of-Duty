@@ -25,6 +25,9 @@ const W = Number(args.w ?? 1920);
 const H = Number(args.h ?? 1080);
 const SETTLE = Number(args.settle ?? 90);
 const OUTDIR = resolve(args.out ?? 'shots/latest');
+// Boot budget. Default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser spends ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 90000);
 const ROOT = resolve(import.meta.dirname, '..');
 
 const portOpen = (port) =>
@@ -66,8 +69,9 @@ mkdirSync(OUTDIR, { recursive: true });
 const report = { ok: true, outDir: OUTDIR, size: `${W}x${H}`, shots: [], errors: [] };
 
 try {
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
+  const quality = args.q ? `&q=${encodeURIComponent(args.q)}` : '';
+  await page.goto(`http://127.0.0.1:${PORT}/?capture=1${quality}`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
 
   const all = await page.evaluate('Object.keys(window.__SHOTS__ ?? {})');
   const wanted = args.shots ? String(args.shots).split(',').map((s) => s.trim()) : all;
@@ -92,7 +96,7 @@ try {
       SETTLE
     );
     const file = `${OUTDIR}/${name}.png`;
-    await page.screenshot({ path: file, type: 'png' });
+    await page.screenshot({ path: file, type: 'png', timeout: TIMEOUT });
     const info = await page.evaluate('window.__RENDER_INFO__ ?? null');
     report.shots.push({
       shot: name,

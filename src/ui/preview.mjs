@@ -30,6 +30,9 @@ const H = Number(args.h ?? 1080);
 const STATE = args.state ?? 'combat';
 const OUT = resolve(args.out ?? `/tmp/ui-${STATE}.png`);
 const SETTLE = Number(args.settle ?? 90);
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 90000);
 
 const portOpen = (port) =>
   new Promise((res) => {
@@ -59,7 +62,7 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
 
 try {
   await page.goto(`http://127.0.0.1:${PORT}/?capture=1&shot=hud`, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
 
   if (args.fonts) {
     const report = await page.evaluate(() => {

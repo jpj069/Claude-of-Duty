@@ -29,6 +29,9 @@ const OUT = resolve(args.out ?? `/tmp/wp-${args.w ?? 'rifle'}-${VIEW}${args.arms
 // between boot and the screenshot RPC", which made the pose depend on machine
 // load. 16 matches the old nominal count (4 to ready + 12 pumped).
 const FRAMES = Math.max(1, Math.round(Number(args.frames ?? 16)));
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 60000);
 const ROOT = resolve(import.meta.dirname, '../..');
 
 const portOpen = (port) =>
@@ -70,9 +73,9 @@ try {
     (args.arms ? `&arms=${args.arms}` : '');
   await page.goto(`http://127.0.0.1:${PORT}/src/weapons/preview.html?view=${VIEW}${extra}`, {
     waitUntil: 'domcontentloaded',
-    timeout: 60000,
+    timeout: TIMEOUT,
   });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 60000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
   await page.evaluate(
     () =>
       new Promise((d) => {
