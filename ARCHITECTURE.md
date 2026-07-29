@@ -1,4 +1,4 @@
-# OVERWATCH — engine contract
+# CLAUDE OF DUTY — engine contract
 
 **Every agent must read this before writing code. It is the only coordination mechanism.**
 

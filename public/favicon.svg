@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Claude of Duty">
+  <rect width="64" height="64" fill="#0b0d10"/>
+  <!-- Reticle: the one mark that reads at 16px and needs no lettering. -->
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#ffc400" stroke-width="3"/>
+  <path d="M32 4v13M32 47v13M4 32h13M47 32h13" stroke="#f4f6f8" stroke-width="4" stroke-linecap="square"/>
+  <circle cx="32" cy="32" r="3.5" fill="#ffc400"/>
+</svg>

@@ -47,10 +47,61 @@ engine
   .add(UiSystem)
   .add(AudioSystem);
 
+/**
+ * Drive the inline boot overlay in play/index.html.
+ *
+ * Subsystem names are mapped to plain language: "generating surface textures"
+ * says what the wait is for, where "materials" reads as a progress-bar label
+ * nobody outside this repo can interpret. Absent overlay (capture harness, the
+ * subsystem preview pages) is fine — every call no-ops.
+ */
+const bootUi = (() => {
+  const root = document.getElementById('boot');
+  if (!root) return { step: () => {}, progress: () => {}, done: () => {} };
+  const fill = document.getElementById('boot-fill');
+  const step = document.getElementById('boot-step');
+  const count = document.getElementById('boot-count');
+  const LABEL = {
+    render: 'starting renderer',
+    materials: 'generating surface textures',
+    sky: 'computing atmosphere',
+    world: 'building the street',
+    physics: 'indexing collision',
+    player: 'wiring movement',
+    weapons: 'machining weapons',
+    fx: 'seeding effects',
+    ai: 'dressing soldiers',
+    ui: 'drawing the HUD',
+    audio: 'synthesising audio',
+  };
+  return {
+    step: (id) => {
+      if (step) step.textContent = LABEL[id] ?? id;
+    },
+    progress: (done, total) => {
+      if (fill) fill.style.width = `${Math.round((done / total) * 100)}%`;
+      if (count) count.textContent = `${done}/${total}`;
+    },
+    done: () => {
+      if (fill) fill.style.width = '100%';
+      if (step) step.textContent = 'ready';
+      root.classList.add('done');
+      document.body.classList.add('booted');
+      // Removed rather than left hidden: it covers the canvas, and a stray
+      // pointer-events regression on it would silently eat every click.
+      setTimeout(() => root.remove(), 600);
+    },
+  };
+})();
+
+engine.events.on('boot:system', ({ id }) => bootUi.step(id));
+engine.events.on('boot:progress', ({ done, total }) => bootUi.progress(done, total));
+
 try {
   await engine.init();
 } catch (err) {
   console.error('[boot] init failed', err);
+  document.getElementById('boot')?.remove();
   document.body.insertAdjacentHTML(
     'beforeend',
     `<pre style="position:fixed;inset:0;padding:2rem;color:#f66;background:#000;
@@ -92,11 +143,15 @@ const BOOT_FRAMES = 3;
 if (lockstep) {
   await shotApi.pump(BOOT_FRAMES);
   window.__READY__ = true;
+  bootUi.done();
 } else {
   let warm = 0;
   const readyProbe = () => {
     if (++warm >= BOOT_FRAMES) {
       window.__READY__ = true;
+      // Same gate as __READY__ on purpose: the overlay must not lift until a
+      // frame has really been drawn, or it reveals one black canvas frame.
+      bootUi.done();
       return;
     }
     requestAnimationFrame(readyProbe);

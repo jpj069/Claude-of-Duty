@@ -30,7 +30,7 @@ const PRACTICAL_RANGE = 30;
 const REF_DAYLIGHT = 4.6;
 
 /**
- * OVERWATCH renderer.
+ * CLAUDE OF DUTY renderer.
  *
  * Frame order (everything HDR, linear, float, until the very last write):
  *
