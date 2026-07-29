@@ -12,7 +12,7 @@
     />
     <link rel="canonical" href="https://claude-of-duty.com/" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta name="theme-color" content="#0b0d10" />
+    <meta name="theme-color" content="#08090b" />
     <meta name="author" content="Claude of Duty" />
 
     <!-- Open Graph -->
@@ -69,6 +69,8 @@
 
   <body>
     <a class="skip" href="#main">Skip to content</a>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"><div class="progress-bar"></div></div>
 
     <header class="nav" id="nav">
       <a class="nav-mark" href="/">
@@ -87,10 +89,10 @@
     <main id="main">
       <!-- ---------------- HERO ---------------- -->
       <section class="hero" id="hero">
-        <div class="hero-layer hero-bg" data-parallax="0.28" aria-hidden="true"></div>
+        <div class="hero-layer hero-bg" data-parallax="0.26" aria-hidden="true"></div>
         <div class="hero-layer hero-veil" aria-hidden="true"></div>
         <div class="hero-inner" data-parallax="-0.06">
-          <p class="eyebrow reveal">BROWSER-NATIVE · WEBGL2 · NOTHING TO INSTALL</p>
+          <p class="eyebrow center reveal">BROWSER-NATIVE · WEBGL2 · NOTHING TO INSTALL</p>
           <h1 class="reveal">
             <span>CLAUDE</span>
             <span class="accent">OF DUTY</span>
@@ -117,10 +119,161 @@
         <div class="scroll-hint" aria-hidden="true"><span></span></div>
       </section>
 
+      <!-- ---------------- TICKER ----------------
+           The render pipeline, stated as a moving strip. Duplicated content is
+           required: the track translates -50%, so the second copy is what makes
+           the loop seamless. -->
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <span>
+            Cascaded shadow maps <b>·</b> PCSS contact hardening <b>·</b> MRT depth
+            prepass <b>·</b> Velocity buffer <b>·</b> GTAO <b>·</b> Screen-space
+            reflections <b>·</b> TAA with YCoCg variance clipping <b>·</b> Tile-dilated
+            motion blur <b>·</b> Karis bloom pyramid <b>·</b> GPU EV100 metering <b>·</b>
+            Procedural 33³ grade LUT <b>·</b> AgX composite <b>·</b> Parallax occlusion
+            mapping <b>·</b> Triplanar projection <b>·</b> Binned-SAH BVH <b>·</b>
+            Swept-capsule controller <b>·</b> PBD ragdolls <b>·</b> HRTF spatialisation
+            <b>·</b> Convolution reverb <b>·</b>&nbsp;
+          </span>
+          <span>
+            Cascaded shadow maps <b>·</b> PCSS contact hardening <b>·</b> MRT depth
+            prepass <b>·</b> Velocity buffer <b>·</b> GTAO <b>·</b> Screen-space
+            reflections <b>·</b> TAA with YCoCg variance clipping <b>·</b> Tile-dilated
+            motion blur <b>·</b> Karis bloom pyramid <b>·</b> GPU EV100 metering <b>·</b>
+            Procedural 33³ grade LUT <b>·</b> AgX composite <b>·</b> Parallax occlusion
+            mapping <b>·</b> Triplanar projection <b>·</b> Binned-SAH BVH <b>·</b>
+            Swept-capsule controller <b>·</b> PBD ragdolls <b>·</b> HRTF spatialisation
+            <b>·</b> Convolution reverb <b>·</b>&nbsp;
+          </span>
+        </div>
+      </div>
+
+      <!-- ---------------- THE CLAIM ---------------- -->
+      <section class="band" id="procedural">
+        <div class="wrap">
+          <p class="eyebrow reveal">01 — THE WHOLE POINT</p>
+          <h2 class="reveal">There is no <em>assets</em> folder.</h2>
+          <p class="body reveal">
+            Most games ship gigabytes of authored content. This one ships a single
+            JavaScript bundle. The concrete, the brick, the rusted steel, the
+            soldiers, the weapons, the reverb on a gunshot in a stairwell — none of
+            it exists until your GPU computes it at load time. That is why the first
+            load takes a moment, and why the download is smaller than one photograph
+            from most games.
+          </p>
+
+          <ul class="facts">
+            <li class="reveal">
+              <b>0</b><span>image, model or audio files in the repository</span>
+            </li>
+            <li class="reveal">
+              <b data-count="19">19</b><span>procedural surface materials, generated on the GPU</span>
+            </li>
+            <li class="reveal">
+              <b>1</b><span>runtime dependency — <code>three</code></span>
+            </li>
+            <li class="reveal">
+              <b data-count="500">~500 KB</b><span>gzipped, the entire game</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ---------------- STILLS ---------------- -->
+      <section class="band" id="stills">
+        <div class="wrap">
+          <p class="eyebrow reveal">02 — CAPTURED IN ENGINE</p>
+          <h2 class="reveal">Every pixel here was computed, not drawn.</h2>
+          <p class="body reveal">
+            Unedited screenshots from the running game, taken through the project's
+            own capture harness. None of these are concept art.
+          </p>
+        </div>
+
+        <figure class="still still-lead reveal">
+          <div class="still-frame">
+            <img
+              src="/img/still-street.jpg"
+              alt="A market street with balconies, awnings, hanging laundry and power lines, seen down the barrel of a rifle"
+              width="1600"
+              height="900"
+              loading="lazy"
+              decoding="async"
+              data-scale="0.05"
+            />
+          </div>
+          <figcaption>
+            The market street — a modular building kit with real wall thickness and
+            several hundred instanced props.
+          </figcaption>
+        </figure>
+
+        <div class="still-grid">
+          <figure class="still reveal">
+            <div class="still-frame">
+              <img
+                src="/img/still-muzzle.jpg"
+                alt="Mid-recoil muzzle flash lighting the weapon and the street, with a spent case in the air"
+                width="1600"
+                height="900"
+                loading="lazy"
+                decoding="async"
+                data-scale="0.06"
+              />
+            </div>
+            <figcaption>Muzzle flash, light spill and case ejection.</figcaption>
+          </figure>
+          <figure class="still reveal">
+            <div class="still-frame">
+              <img
+                src="/img/still-interior.jpg"
+                alt="A building interior with light falling through a window opening onto the street outside"
+                width="1600"
+                height="900"
+                loading="lazy"
+                decoding="async"
+                data-scale="0.06"
+              />
+            </div>
+            <figcaption>Enterable interiors, lit through their own openings.</figcaption>
+          </figure>
+          <figure class="still reveal">
+            <div class="still-frame">
+              <img
+                src="/img/still-combat.jpg"
+                alt="Enemy soldiers taking cover among market stalls during a firefight"
+                width="1600"
+                height="900"
+                loading="lazy"
+                decoding="async"
+                data-scale="0.06"
+              />
+            </div>
+            <figcaption>Skinned soldiers with navmesh pathing and cover behaviour.</figcaption>
+          </figure>
+          <figure class="still reveal">
+            <div class="still-frame">
+              <img
+                src="/img/still-hud.jpg"
+                alt="The full combat HUD with minimap, compass, killfeed, objective markers, health and ammunition"
+                width="1600"
+                height="900"
+                loading="lazy"
+                decoding="async"
+                data-scale="0.06"
+              />
+            </div>
+            <figcaption>
+              The HUD is DOM and CSS — crosshair, minimap, compass, killfeed,
+              objective markers.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       <!-- ---------------- CINEMATIC PLATE ----------------
-           Concept art, not a screenshot, and captioned as such right on the image
-           rather than only in the footer — the gameplay stills further down carry
-           the opposite label for the same reason. -->
+           Concept art, captioned on the image rather than only in the footer — the
+           stills above carry the opposite label for the same reason. -->
       <div class="plate">
         <img
           src="/img/keyart-night.jpg"
@@ -129,118 +282,23 @@
           height="900"
           loading="lazy"
           decoding="async"
-          data-parallax="0.2"
+          data-parallax="0.18"
         />
         <div class="plate-veil" aria-hidden="true"></div>
         <p class="plate-cap">Concept art — not actual gameplay</p>
       </div>
 
-      <!-- ---------------- THE CLAIM ---------------- -->
-      <section class="band" id="procedural">
-        <div class="wrap">
-          <p class="eyebrow reveal">THE WHOLE POINT</p>
-          <h2 class="reveal">There is no <em>assets</em> folder.</h2>
-          <p class="body reveal">
-            Most games ship gigabytes of authored content. This one ships a single
-            JavaScript bundle. The concrete, the brick, the rusted steel, the
-            soldiers, the weapons, the reverb on a gunshot in a stairwell — none of
-            it exists until your GPU computes it at load time. That is also why the
-            first load takes a moment, and why the download is smaller than a
-            single photograph from most games.
-          </p>
-
-          <ul class="facts">
-            <li class="reveal">
-              <b>0</b><span>image, model or audio files in the repository</span>
-            </li>
-            <li class="reveal">
-              <b>19</b><span>procedural surface materials, generated on the GPU</span>
-            </li>
-            <li class="reveal">
-              <b>1</b><span>runtime dependency — <code>three</code></span>
-            </li>
-            <li class="reveal">
-              <b>~500 KB</b><span>gzipped, the entire game</span>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ---------------- STILLS ---------------- -->
-      <section class="band band-flush" id="stills">
-        <div class="wrap">
-          <p class="eyebrow reveal">CAPTURED IN ENGINE</p>
-          <h2 class="reveal">Every pixel here was computed, not drawn.</h2>
-          <p class="body reveal">
-            These are unedited screenshots from the running game, taken through the
-            project's own capture harness. Nothing is concept art.
-          </p>
-        </div>
-
-        <figure class="still reveal">
-          <img
-            src="/img/still-street.jpg"
-            alt="A market street with balconies, awnings, hanging laundry and power lines, seen down the barrel of a rifle"
-            width="1600"
-            height="900"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>
-            The market street — a modular building kit with real wall thickness and
-            several hundred instanced props.
-          </figcaption>
-        </figure>
-
-        <div class="still-pair">
-          <figure class="still reveal">
-            <img
-              src="/img/still-muzzle.jpg"
-              alt="Mid-recoil muzzle flash lighting the weapon and the street, with a spent case in the air"
-              width="1600"
-              height="900"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>Muzzle flash, light spill and case ejection.</figcaption>
-          </figure>
-          <figure class="still reveal">
-            <img
-              src="/img/still-interior.jpg"
-              alt="A building interior with light falling through a window opening onto the street outside"
-              width="1600"
-              height="900"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>Enterable interiors, lit through their own openings.</figcaption>
-          </figure>
-        </div>
-
-        <figure class="still reveal">
-          <img
-            src="/img/still-hud.jpg"
-            alt="The full combat HUD with minimap, compass, killfeed, objective markers, health and ammunition"
-            width="1600"
-            height="900"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>
-            The HUD is DOM and CSS — crosshair, minimap, compass, killfeed, objective
-            markers.
-          </figcaption>
-        </figure>
-      </section>
-
       <!-- ---------------- ENGINE ---------------- -->
       <section class="band" id="engine">
         <div class="wrap">
-          <p class="eyebrow reveal">ELEVEN SUBSYSTEMS</p>
-          <h2 class="reveal">Written from scratch, including the parts nobody writes from scratch.</h2>
+          <p class="eyebrow reveal">03 — ELEVEN SUBSYSTEMS</p>
+          <h2 class="reveal">
+            Written from scratch, including the parts nobody writes from scratch.
+          </h2>
 
           <div class="grid">
             <article class="card reveal">
+              <span class="card-n">01</span>
               <h3>Renderer</h3>
               <p>
                 An HDR pipeline built by hand, not assembled from examples. Cascaded
@@ -251,6 +309,7 @@
               </p>
             </article>
             <article class="card reveal">
+              <span class="card-n">02</span>
               <h3>Materials</h3>
               <p>
                 A texture forge that runs on the GPU. Nineteen surfaces — concrete,
@@ -261,6 +320,7 @@
               </p>
             </article>
             <article class="card reveal">
+              <span class="card-n">03</span>
               <h3>Physics</h3>
               <p>
                 No library. A binned-SAH bounding volume hierarchy, a swept-capsule
@@ -270,6 +330,7 @@
               </p>
             </article>
             <article class="card reveal">
+              <span class="card-n">04</span>
               <h3>Audio</h3>
               <p>
                 Synthesised through the Web Audio API with no sound files at all.
@@ -278,6 +339,7 @@
               </p>
             </article>
             <article class="card reveal">
+              <span class="card-n">05</span>
               <h3>Sky</h3>
               <p>
                 Atmospheric scattering with a time of day, environment maps generated
@@ -285,6 +347,7 @@
               </p>
             </article>
             <article class="card reveal">
+              <span class="card-n">06</span>
               <h3>Agents</h3>
               <p>
                 Skinned soldiers with navmesh pathing, perception, cover behaviour and
@@ -298,9 +361,9 @@
 
       <!-- ---------------- ORIGIN ---------------- -->
       <section class="band band-quote" id="origin">
-        <div class="hero-layer band-bg" data-parallax="0.16" aria-hidden="true"></div>
+        <div class="band-bg" data-parallax="0.14" aria-hidden="true"></div>
         <div class="wrap">
-          <p class="eyebrow reveal">WHERE IT CAME FROM</p>
+          <p class="eyebrow reveal">04 — WHERE IT CAME FROM</p>
           <h2 class="reveal">One prompt produced this repository.</h2>
           <blockquote class="quote reveal">
             <p>
@@ -312,15 +375,23 @@
           </blockquote>
           <p class="body reveal">
             Roughly 55,000 lines across eleven subsystems followed, written by a fleet
-            of AI agents working against a shared engine contract, with a harsh
-            visual critic looping on each subsystem until it passed. The full prompt
-            and the harness that reviewed the output are both in the repository.
+            of AI agents working against a shared engine contract, with a harsh visual
+            critic looping on each subsystem until it passed. The full prompt and the
+            harness that reviewed the output are both in the repository.
           </p>
           <p class="body reveal">
-            It is a single-player technical demo, and it is honest about that: there
-            is no multiplayer, no matchmaking and no server. What there is, is a
-            renderer you can read.
+            It is a single-player technical demo, and it is honest about that: no
+            multiplayer, no matchmaking, no server. What there is, is a renderer you
+            can read.
           </p>
+        </div>
+      </section>
+
+      <!-- ---------------- CLOSE ---------------- -->
+      <section class="close">
+        <div class="wrap">
+          <p class="eyebrow center reveal">NOTHING TO INSTALL</p>
+          <h2 class="reveal">Open a tab. The world builds itself.</h2>
           <div class="cta-row reveal">
             <a class="btn btn-primary btn-lg" href="/play/">PLAY IN BROWSER</a>
             <a
@@ -336,22 +407,28 @@
 
     <footer class="foot">
       <div class="wrap foot-inner">
-        <p class="foot-mark">CLAUDE OF DUTY</p>
-        <p class="foot-note">
-          A single-player technical demo built with Three.js and WebGL2. Not
-          affiliated with, endorsed by or connected to Activision or the Call of Duty
-          series.
-        </p>
-        <p class="foot-note">
-          Images labelled <em>captured in engine</em> are unedited screenshots from
-          the running game. Images labelled <em>concept art</em> are illustrative and
-          may differ from actual gameplay. Performance depends on your hardware and
-          browser.
-        </p>
-        <p class="foot-links">
-          <a href="/play/">Play</a>
-          <a href="https://github.com/jpj069/Claude-of-Duty" rel="noopener">Source</a>
-        </p>
+        <div class="foot-brand">
+          <img src="/logo.svg" alt="" width="34" height="34" />
+          <p class="foot-mark">CLAUDE<span>OF DUTY</span></p>
+        </div>
+        <div class="foot-col">
+          <p class="foot-note">
+            A single-player technical demo built with Three.js and WebGL2. Not
+            affiliated with, endorsed by or connected to Activision or the Call of Duty
+            series.
+          </p>
+          <p class="foot-note">
+            Images labelled <em>captured in engine</em> are unedited screenshots from
+            the running game. Images labelled <em>concept art</em> are illustrative and
+            may differ from actual gameplay. Performance depends on your hardware and
+            browser.
+          </p>
+          <p class="foot-links">
+            <a href="/play/">Play</a>
+            <a href="https://github.com/jpj069/Claude-of-Duty" rel="noopener">Source</a>
+            <a href="#main">Back to top</a>
+          </p>
+        </div>
       </div>
     </footer>
   </body>

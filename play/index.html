@@ -81,9 +81,9 @@
         transition: width 0.35s ease;
       }
       .boot-status {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 18px;
         width: min(520px, 82vw);
         margin: 0 auto;
         font: 400 11px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
@@ -99,6 +99,18 @@
         text-align: center;
       }
       .boot-note b { color: var(--ink); font-weight: 500; }
+      /* Tabular figures: the elapsed readout ticks 10x a second and must not
+         shift the columns either side of it while the digits change. */
+      #boot-elapsed { font-variant-numeric: tabular-nums; color: var(--ink); }
+      #boot-slow {
+        width: min(520px, 82vw);
+        margin: -8px auto 0;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--signal);
+        text-align: center;
+      }
+      #boot-slow[hidden] { display: none; }
       .boot-back {
         display: block;
         width: min(520px, 82vw);
@@ -129,8 +141,13 @@
       <div class="boot-track"><div class="boot-fill" id="boot-fill"></div></div>
       <div class="boot-status">
         <span id="boot-step">starting engine</span>
+        <span id="boot-elapsed">0.0s</span>
         <span id="boot-count"></span>
       </div>
+      <p class="boot-slow" id="boot-slow" hidden>
+        Still going. A slower GPU can take a minute or more the first time —
+        nothing is stuck, the world is still being computed.
+      </p>
       <p class="boot-note">
         This game ships <b>no art assets</b>. Every texture, mesh, animation and
         sound is being generated on your GPU right now, which is why the first

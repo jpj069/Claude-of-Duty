@@ -57,10 +57,32 @@ engine
  */
 const bootUi = (() => {
   const root = document.getElementById('boot');
-  if (!root) return { step: () => {}, progress: () => {}, done: () => {} };
+  if (!root) return { step: () => {}, progress: () => {}, done: () => {}, fail: () => {} };
   const fill = document.getElementById('boot-fill');
   const step = document.getElementById('boot-step');
   const count = document.getElementById('boot-count');
+  const elapsed = document.getElementById('boot-elapsed');
+  const slow = document.getElementById('boot-slow');
+
+  /**
+   * Elapsed-time readout, started as soon as this module runs.
+   *
+   * The progress bar alone answers "how far", not "is it moving" — and a single
+   * subsystem here can hold for tens of seconds (ai material prewarm is ~45 s
+   * through a software rasteriser), during which a bar that does not budge looks
+   * exactly like a hang. A ticking clock is the cheapest possible proof of life.
+   *
+   * `SLOW_AFTER` then says out loud that a long wait is expected rather than
+   * broken, because the honest failure mode here is a visitor closing the tab at
+   * 20 seconds believing it crashed.
+   */
+  const t0 = performance.now();
+  const SLOW_AFTER = 20_000;
+  let timer = setInterval(() => {
+    const ms = performance.now() - t0;
+    if (elapsed) elapsed.textContent = `${(ms / 1000).toFixed(1)}s`;
+    if (slow && ms > SLOW_AFTER) slow.hidden = false;
+  }, 100);
   const LABEL = {
     render: 'starting renderer',
     materials: 'generating surface textures',
@@ -83,13 +105,24 @@ const bootUi = (() => {
       if (count) count.textContent = `${done}/${total}`;
     },
     done: () => {
+      clearInterval(timer);
+      timer = null;
       if (fill) fill.style.width = '100%';
       if (step) step.textContent = 'ready';
+      if (elapsed) elapsed.textContent = `${((performance.now() - t0) / 1000).toFixed(1)}s`;
+      if (slow) slow.hidden = true;
       root.classList.add('done');
       document.body.classList.add('booted');
       // Removed rather than left hidden: it covers the canvas, and a stray
       // pointer-events regression on it would silently eat every click.
       setTimeout(() => root.remove(), 600);
+    },
+    /** Boot threw: drop the overlay so the error is not hidden behind it, and
+        stop the clock — otherwise it keeps ticking against a detached node. */
+    fail: () => {
+      clearInterval(timer);
+      timer = null;
+      root.remove();
     },
   };
 })();
@@ -101,7 +134,7 @@ try {
   await engine.init();
 } catch (err) {
   console.error('[boot] init failed', err);
-  document.getElementById('boot')?.remove();
+  bootUi.fail();
   document.body.insertAdjacentHTML(
     'beforeend',
     `<pre style="position:fixed;inset:0;padding:2rem;color:#f66;background:#000;
