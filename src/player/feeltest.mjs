@@ -14,6 +14,7 @@
  * Nothing in the game depends on this file; it is a review tool.
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
@@ -49,10 +50,7 @@ async function ensureServer() {
 }
 
 const server = await ensureServer();
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--use-angle=metal', '--ignore-gpu-blocklist', '--mute-audio', '--disable-frame-rate-limit'],
-});
+const browser = await chromium.launch(launchOptions(['--mute-audio', '--disable-frame-rate-limit']));
 const page = await browser.newPage({ viewport: { width: 640, height: 360 } });
 const logs = [];
 page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));

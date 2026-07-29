@@ -8,6 +8,7 @@
  *   node src/fx/shoot.mjs --kind=wall --out=/tmp/fx.png --port=5207
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -26,6 +27,9 @@ const H = Number(args.h ?? 1080);
 const KIND = args.kind ?? 'wall';
 const OUT = resolve(args.out ?? `/tmp/fx-${KIND}.png`);
 const SETTLE = Number(args.settle ?? 90);
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 60000);
 
 const portOpen = (port) =>
   new Promise((res) => {
@@ -52,10 +56,7 @@ if (!(await portOpen(PORT))) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--use-angle=metal', '--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--force-color-profile=srgb', '--hide-scrollbars'],
-});
+const browser = await chromium.launch(launchOptions());
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const logs = [];
 page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
@@ -65,9 +66,9 @@ let failed = null;
 try {
   await page.goto(`http://127.0.0.1:${PORT}/src/fx/preview.html?kind=${encodeURIComponent(KIND)}${args.log ? '&log=1' : ''}`, {
     waitUntil: 'domcontentloaded',
-    timeout: 60000,
+    timeout: TIMEOUT,
   });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 60000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
   await page.evaluate(
     (n) =>
       new Promise((done) => {

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
+     role="img" aria-label="Claude of Duty">
+  <!-- Redrawn as vector from the generated reference: the source was a raster with
+       a baked background, which is wrong for a mark that has to sit on the nav, a
+       favicon and a dark hero alike. This is ~700 bytes and stays crisp at 16 px. -->
+  <title>Claude of Duty</title>
+
+  <!-- angular shield: pointy-top hexagon, off-white -->
+  <path d="M32 5 L55.4 18.5 L55.4 45.5 L32 59 L8.6 45.5 L8.6 18.5 Z"
+        stroke="#F2EFE6" stroke-width="3.4" stroke-linejoin="miter" />
+
+  <!-- reticle ring, broken at the four cardinals so the ticks read through -->
+  <g stroke="#FFC400" stroke-width="2.6" stroke-linecap="butt">
+    <path d="M42.72 29.53 A 11 11 0 0 0 34.47 21.28" />
+    <path d="M29.53 21.28 A 11 11 0 0 0 21.28 29.53" />
+    <path d="M21.28 34.47 A 11 11 0 0 0 29.53 42.72" />
+    <path d="M34.47 42.72 A 11 11 0 0 0 42.72 34.47" />
+    <!-- ticks crossing each gap -->
+    <path d="M32 15.5 V26" />
+    <path d="M48.5 32 H38" />
+    <path d="M32 48.5 V38" />
+    <path d="M15.5 32 H26" />
+  </g>
+
+  <circle cx="32" cy="32" r="3.1" fill="#FFC400" />
+</svg>

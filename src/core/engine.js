@@ -74,11 +74,28 @@ export class Engine {
 
   async init() {
     const order = this.registry.resolve();
-    for (const sys of order) {
+    /**
+     * Report boot progress per subsystem.
+     *
+     * Everything here is generated at load time — 19 procedural surface sets, the
+     * sky LUTs, the soldier textures — which takes seconds on a fast GPU and much
+     * longer on a slow one. With a black canvas and no cursor, that reads as a
+     * dead page rather than as loading, which is exactly what it was mistaken for.
+     *
+     * The count is emitted rather than a percentage guess: subsystems are wildly
+     * uneven (ai is ~45 s through a software rasteriser, ui is ~1 ms), so a bar
+     * driven by these events moves in honest jumps instead of pretending to be
+     * linear.
+     */
+    this.events.emit('boot:progress', { done: 0, total: order.length, id: null });
+    for (const [i, sys] of order.entries()) {
+      const id = sys.constructor.id;
+      this.events.emit('boot:system', { index: i, total: order.length, id });
       const t0 = performance.now();
       await sys.init?.(this.ctx);
       const ms = performance.now() - t0;
-      if (ms > 50) console.info(`[engine] ${sys.constructor.id} init ${ms.toFixed(0)}ms`);
+      if (ms > 50) console.info(`[engine] ${id} init ${ms.toFixed(0)}ms`);
+      this.events.emit('boot:progress', { done: i + 1, total: order.length, id });
     }
     this.input.attach();
     addEventListener('resize', this._onResize);

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# The game page is a canvas with no readable content and a multi-second boot.
+# It is linked from the landing page and marked noindex,follow in its own head;
+# this keeps crawlers from spending budget rendering it.
+Disallow: /play/
+
+Sitemap: https://claude-of-duty.com/sitemap.xml

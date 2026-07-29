@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>Play CLAUDE OF DUTY — browser FPS, nothing to install</title>
+    <meta
+      name="description"
+      content="Play CLAUDE OF DUTY in the browser. A first-person shooter with no art assets: every texture, mesh, animation and sound is generated procedurally at load time."
+    />
+    <link rel="canonical" href="https://claude-of-duty.com/play/" />
+    <!-- The game page is not a search result worth having: it is a canvas that
+         takes seconds to boot and holds no readable content. Point crawlers at the
+         landing page and let them follow the link from there. -->
+    <meta name="robots" content="noindex,follow" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f2f4f7;
+        --dim: #8b939e;
+        --signal: #ffc400;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+      body {
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* cursor:none belongs to the RUNNING game, not to the loading screen.
+         Hiding the pointer while the page is still black is a large part of what
+         made boot feel like a hang rather than a wait. `.booted` is set once a
+         frame has actually landed. */
+      #game { display: block; width: 100vw; height: 100vh; touch-action: none; }
+      body.booted #game { cursor: none; }
+
+      /* ---- boot overlay ---------------------------------------------------
+         Inline, not drawn by the bundle: the bundle is ~1.6 MB and has to parse
+         before it could render anything, so a JS-driven overlay would leave the
+         same black gap this exists to remove. */
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: grid;
+        place-content: center;
+        gap: 26px;
+        padding: 8vw;
+        background: radial-gradient(120% 90% at 50% 0%, #16181d 0%, #000 70%);
+        transition: opacity 0.5s ease;
+      }
+      #boot.done { opacity: 0; pointer-events: none; }
+      .boot-mark {
+        font-size: clamp(28px, 6vw, 62px);
+        font-weight: 200;
+        letter-spacing: 0.34em;
+        line-height: 1;
+        color: var(--ink);
+        text-align: center;
+        text-indent: 0.34em;
+      }
+      .boot-sub {
+        margin-top: 14px;
+        font-size: clamp(10px, 1.5vw, 12px);
+        letter-spacing: 0.28em;
+        color: var(--signal);
+        text-align: center;
+        text-indent: 0.28em;
+      }
+      .boot-track {
+        width: min(520px, 82vw);
+        height: 2px;
+        margin: 0 auto;
+        background: #23262c;
+        overflow: hidden;
+      }
+      .boot-fill {
+        height: 100%;
+        width: 0%;
+        background: var(--signal);
+        transition: width 0.35s ease;
+      }
+      .boot-status {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        width: min(520px, 82vw);
+        margin: 0 auto;
+        font: 400 11px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
+        letter-spacing: 0.1em;
+        color: var(--dim);
+      }
+      .boot-note {
+        width: min(520px, 82vw);
+        margin: 0 auto;
+        font-size: 12px;
+        line-height: 1.7;
+        color: var(--dim);
+        text-align: center;
+      }
+      .boot-note b { color: var(--ink); font-weight: 500; }
+      .boot-back {
+        display: block;
+        width: min(520px, 82vw);
+        margin: 0 auto;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        color: var(--dim);
+        text-decoration: none;
+      }
+      .boot-back:hover { color: var(--ink); }
+      @media (prefers-reduced-motion: reduce) {
+        #boot, .boot-fill { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="ui"></div>
+
+    <div id="boot" role="status" aria-live="polite">
+      <div>
+        <img src="/logo.svg" alt="" width="64" height="64"
+             style="width:64px;height:64px;margin:0 auto 22px;display:block" />
+        <div class="boot-mark">CLAUDE OF DUTY</div>
+        <div class="boot-sub">BUILDING THE WORLD</div>
+      </div>
+      <div class="boot-track"><div class="boot-fill" id="boot-fill"></div></div>
+      <div class="boot-status">
+        <span id="boot-step">starting engine</span>
+        <span id="boot-count"></span>
+      </div>
+      <p class="boot-note">
+        This game ships <b>no art assets</b>. Every texture, mesh, animation and
+        sound is being generated on your GPU right now, which is why the first
+        load takes a moment.
+      </p>
+      <a class="boot-back" href="/">&larr; BACK TO OVERVIEW</a>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

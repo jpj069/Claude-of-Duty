@@ -5,6 +5,7 @@
  *   node src/weapons/shoot.mjs --w=rifle --view=hero --out=/tmp/wp-hero.png --port=5210
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -28,6 +29,9 @@ const OUT = resolve(args.out ?? `/tmp/wp-${args.w ?? 'rifle'}-${VIEW}${args.arms
 // between boot and the screenshot RPC", which made the pose depend on machine
 // load. 16 matches the old nominal count (4 to ready + 12 pumped).
 const FRAMES = Math.max(1, Math.round(Number(args.frames ?? 16)));
+// Boot budget. The default matches the old hard-coded value; raise it on slow
+// hardware — a software rasteriser can spend ~50 s in AI material prewarm alone.
+const TIMEOUT = Number(args.timeout ?? 60000);
 const ROOT = resolve(import.meta.dirname, '../..');
 
 const portOpen = (port) =>
@@ -54,17 +58,7 @@ if (!(await portOpen(PORT))) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
-    '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
-    '--hide-scrollbars',
-  ],
-});
+const browser = await chromium.launch(launchOptions(['--disable-frame-rate-limit']));
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const logs = [];
 page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
@@ -79,9 +73,9 @@ try {
     (args.arms ? `&arms=${args.arms}` : '');
   await page.goto(`http://127.0.0.1:${PORT}/src/weapons/preview.html?view=${VIEW}${extra}`, {
     waitUntil: 'domcontentloaded',
-    timeout: 60000,
+    timeout: TIMEOUT,
   });
-  await page.waitForFunction('window.__READY__ === true', null, { timeout: 60000 });
+  await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
   await page.evaluate(
     () =>
       new Promise((d) => {

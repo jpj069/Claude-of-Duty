@@ -9,9 +9,14 @@
  * Usage:
  *   node tools/capture.mjs --shot=hero --out=shots/hero.png
  *   node tools/capture.mjs --shot=hero --out=shots/hero.png --w=2560 --h=1440
+ *   node tools/capture.mjs --shot=hero --q=medium --settle=8
  *   node tools/capture.mjs --list
+ *
+ * Browser/GL backend selection and the CAPTURE_CHROME override live in
+ * tools/chromium-launch.mjs, shared with every other harness.
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -60,21 +65,15 @@ async function ensureServer() {
 
 const server = await ensureServer();
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
+const browser = await chromium.launch(
+  launchOptions([
     '--enable-unsafe-webgpu',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
     '--enable-zero-copy',
     '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
     '--force-device-scale-factor=1',
-    '--hide-scrollbars',
     '--mute-audio',
-  ],
-});
+  ]),
+);
 
 const page = await browser.newPage({
   viewport: { width: W, height: H },
@@ -87,7 +86,8 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}\n${e.stack ?? ''
 
 let failed = null;
 try {
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1&shot=${encodeURIComponent(SHOT)}`, {
+  const quality = args.q ? `&q=${encodeURIComponent(args.q)}` : '';
+  await page.goto(`http://127.0.0.1:${PORT}/?capture=1${quality}&shot=${encodeURIComponent(SHOT)}`, {
     waitUntil: 'domcontentloaded',
     timeout: TIMEOUT,
   });
@@ -119,7 +119,7 @@ try {
     );
 
     mkdirSync(dirname(OUT), { recursive: true });
-    await page.screenshot({ path: OUT, type: 'png' });
+    await page.screenshot({ path: OUT, type: 'png', timeout: TIMEOUT });
 
     const info = await page.evaluate('window.__RENDER_INFO__ ?? null');
     console.log(JSON.stringify({ ok: true, out: OUT, shot: SHOT, w: W, h: H, info }, null, 2));

@@ -11,6 +11,7 @@
  * Only ever run this on port 5206 — every other agent owns a different port.
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
@@ -45,10 +46,7 @@ if (!(await portOpen(PORT))) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--use-angle=metal', '--ignore-gpu-blocklist', '--hide-scrollbars', '--mute-audio'],
-});
+const browser = await chromium.launch(launchOptions(['--mute-audio']));
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
 const logs = [];
 page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
