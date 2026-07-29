@@ -198,13 +198,13 @@ code {
 .hero-bg {
   top: -12%;
   height: 124%;
-  background: url("/img/hero-bg.jpg") center/cover no-repeat;
+  background: url("/img/keyart.jpg") center/cover no-repeat;
   will-change: transform;
 }
 .hero-veil {
   background:
-    radial-gradient(85% 65% at 50% 42%, rgba(11, 13, 16, 0.06) 0%, rgba(11, 13, 16, 0.66) 72%),
-    linear-gradient(180deg, rgba(11, 13, 16, 0.55) 0%, transparent 26%, rgba(11, 13, 16, 0.85) 88%, var(--bg) 100%);
+    radial-gradient(80% 62% at 50% 45%, rgba(11, 13, 16, 0.42) 0%, rgba(11, 13, 16, 0.88) 74%),
+    linear-gradient(180deg, rgba(11, 13, 16, 0.78) 0%, rgba(11, 13, 16, 0.3) 28%, rgba(11, 13, 16, 0.92) 86%, var(--bg) 100%);
 }
 .hero-inner {
   width: 100%;
@@ -266,7 +266,7 @@ code {
   position: absolute;
   inset: -14% 0;
   z-index: -1;
-  background: url("/img/band-bg.jpg") center/cover no-repeat;
+  background: url("/img/hero-bg.jpg") center/cover no-repeat;
   opacity: 0.85;
   will-change: transform;
 }
@@ -415,3 +415,24 @@ code {
 }
 /* Belt and braces: if the module never runs, nothing stays hidden. */
 .no-js .reveal { opacity: 1; transform: none; }
+
+/* ---------------- logo lockup ---------------- */
+.nav-mark { flex-direction: row; align-items: center; gap: 11px; }
+.nav-logo { width: 30px; height: 30px; flex: none; }
+.nav-words { display: flex; flex-direction: column; }
+
+/* Concept-art label for the hero plate. Bottom-left, quiet, but present — the
+   footer disclaimer alone leaves the biggest image on the site unlabelled. */
+.hero-cap {
+  position: absolute;
+  left: var(--gut);
+  bottom: 22px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+@media (max-width: 640px) {
+  .hero-cap { position: static; margin-top: 30px; text-align: center; }
+}
