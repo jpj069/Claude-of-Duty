@@ -15,6 +15,7 @@ import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from '../../tools/game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -53,7 +54,7 @@ page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
 page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
 
 try {
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1&shot=${SHOT}`, {
+  await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1&shot=${SHOT}`, {
     waitUntil: 'domcontentloaded',
   });
   await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });

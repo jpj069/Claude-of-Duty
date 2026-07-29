@@ -12,6 +12,7 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -70,7 +71,7 @@ const report = { ok: true, outDir: OUTDIR, size: `${W}x${H}`, shots: [], errors:
 
 try {
   const quality = args.q ? `&q=${encodeURIComponent(args.q)}` : '';
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1${quality}`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+  await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1${quality}`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
   await page.waitForFunction('window.__READY__ === true', null, { timeout: TIMEOUT });
 
   const all = await page.evaluate('Object.keys(window.__SHOTS__ ?? {})');

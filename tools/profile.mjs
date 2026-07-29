@@ -18,6 +18,7 @@
 import { chromium } from 'playwright';
 import { launchOptions } from './chromium-launch.mjs';
 import { resolve } from 'node:path';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).map((a) => {
   const m = a.match(/^--([^=]+)(?:=(.*))?$/); return m ? [m[1], m[2] ?? true] : [a, true];
@@ -36,7 +37,7 @@ page.on('pageerror', (e) => errs.push(e.message));
 
 const t0 = Date.now();
 const EXTRA = args.query ? `?${args.query}` : '';
-await page.goto(`http://127.0.0.1:${PORT}/${EXTRA}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}${EXTRA}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
 await page.waitForFunction('window.__READY__ === true', null, { timeout: 120000 });
 const bootMs = Date.now() - t0;
 

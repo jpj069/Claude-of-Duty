@@ -10,6 +10,7 @@ import { launchOptions } from './chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -73,7 +74,7 @@ if (!(await portOpen(PORT))) {
 
 const browser = await chromium.launch(launchOptions(['--mute-audio']));
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
-await page.goto(`http://127.0.0.1:${PORT}/?capture=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
 await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
 
 const shots = String(args.shots ?? 'hero,sunset,night,interior').split(',');

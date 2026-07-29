@@ -21,6 +21,7 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -87,7 +88,7 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}\n${e.stack ?? ''
 let failed = null;
 try {
   const quality = args.q ? `&q=${encodeURIComponent(args.q)}` : '';
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1${quality}&shot=${encodeURIComponent(SHOT)}`, {
+  await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1${quality}&shot=${encodeURIComponent(SHOT)}`, {
     waitUntil: 'domcontentloaded',
     timeout: TIMEOUT,
   });

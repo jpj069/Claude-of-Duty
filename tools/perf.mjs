@@ -1,10 +1,11 @@
 import { chromium } from 'playwright';
 import { launchOptions } from './chromium-launch.mjs';
+import { GAME_PATH } from './game-url.mjs';
 const b = await chromium.launch(launchOptions(['--mute-audio', '--disable-frame-rate-limit', '--disable-gpu-vsync']));
 const out=[];
 for (const [w,h] of [[1280,720],[1920,1080],[2560,1440]]) {
   const p = await b.newPage({ viewport:{width:w,height:h} });
-  await p.goto('http://127.0.0.1:8080/?capture=1',{waitUntil:'domcontentloaded'});
+  await p.goto('http://127.0.0.1:8080' + GAME_PATH + '?capture=1',{waitUntil:'domcontentloaded'});
   await p.waitForFunction('window.__READY__===true',null,{timeout:60000});
   await p.evaluate(()=>window.__APPLY_SHOT__('hero'));
   await p.evaluate(()=>new Promise(d=>{let i=0;const t=()=>++i>=120?d():requestAnimationFrame(t);requestAnimationFrame(t)})); // warm
