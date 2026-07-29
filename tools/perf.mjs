@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
-const b = await chromium.launch({ headless:true, args:['--use-angle=metal','--ignore-gpu-blocklist','--mute-audio','--disable-frame-rate-limit','--disable-gpu-vsync'] });
+import { launchOptions } from './chromium-launch.mjs';
+const b = await chromium.launch(launchOptions(['--mute-audio', '--disable-frame-rate-limit', '--disable-gpu-vsync']));
 const out=[];
 for (const [w,h] of [[1280,720],[1920,1080],[2560,1440]]) {
   const p = await b.newPage({ viewport:{width:w,height:h} });

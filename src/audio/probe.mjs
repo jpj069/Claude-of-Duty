@@ -20,6 +20,7 @@
  *   node src/audio/probe.mjs --port=5213 --live=0   # offline only
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
@@ -59,16 +60,7 @@ async function ensureServer() {
 
 const server = await ensureServer();
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
-    '--ignore-gpu-blocklist',
-    '--mute-audio',
-    '--autoplay-policy=no-user-gesture-required',
-    '--hide-scrollbars',
-  ],
-});
+const browser = await chromium.launch(launchOptions(['--mute-audio', '--autoplay-policy=no-user-gesture-required']));
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
 
 const logs = [];

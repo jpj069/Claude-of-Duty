@@ -20,6 +20,7 @@
  *   node tools/demo.mjs --frames=1800 --out=reel.mp4 --keep
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync, existsSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
@@ -78,20 +79,7 @@ mkdirSync(dirname(OUT), { recursive: true });
 const server = await ensureServer();
 log(`[demo] vite on :${PORT}${server ? '' : ' (already running)'}`);
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
-    '--enable-zero-copy',
-    '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
-    '--force-device-scale-factor=1',
-    '--hide-scrollbars',
-    '--mute-audio',
-  ],
-});
+const browser = await chromium.launch(launchOptions(['--enable-zero-copy', '--disable-frame-rate-limit', '--force-device-scale-factor=1', '--mute-audio']));
 
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 

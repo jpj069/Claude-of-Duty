@@ -7,6 +7,7 @@
  *   node tools/shotset.mjs --shots=hero,detail --out=tmp  # a subset
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -53,18 +54,7 @@ if (!(await portOpen(PORT))) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
-    '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
-    '--hide-scrollbars',
-    '--mute-audio',
-  ],
-});
+const browser = await chromium.launch(launchOptions(['--disable-frame-rate-limit', '--mute-audio']));
 
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const logs = [];

@@ -12,13 +12,11 @@
  *   node tools/capture.mjs --shot=hero --q=medium --settle=8
  *   node tools/capture.mjs --list
  *
- * Environment:
- *   CAPTURE_CHROME   absolute path to a Chromium binary, when the one bundled
- *                    with the installed playwright is not the one you want
- *                    (CI images that preinstall browsers at a pinned revision).
+ * Browser/GL backend selection and the CAPTURE_CHROME override live in
+ * tools/chromium-launch.mjs, shared with every other harness.
  */
 import { chromium } from 'playwright';
-import { platform } from 'node:os';
+import { launchOptions } from './chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -67,32 +65,15 @@ async function ensureServer() {
 
 const server = await ensureServer();
 
-// Metal is the right ANGLE backend on macOS and a hard error anywhere else, so
-// only darwin pins one. Elsewhere Chromium picks: real GPU when the box has one,
-// SwiftShader when it does not (headless CI, containers). `unsafe-swiftshader`
-// only matters in that fallback — without it newer Chromium refuses to expose
-// WebGL over the software rasteriser and the harness dies on a null context.
-const angleArgs =
-  platform() === 'darwin'
-    ? ['--use-angle=metal']
-    : ['--enable-unsafe-swiftshader'];
-
-const browser = await chromium.launch({
-  headless: true,
-  ...(process.env.CAPTURE_CHROME ? { executablePath: process.env.CAPTURE_CHROME } : {}),
-  args: [
-    ...angleArgs,
+const browser = await chromium.launch(
+  launchOptions([
     '--enable-unsafe-webgpu',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
     '--enable-zero-copy',
     '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
     '--force-device-scale-factor=1',
-    '--hide-scrollbars',
     '--mute-audio',
-  ],
-});
+  ]),
+);
 
 const page = await browser.newPage({
   viewport: { width: W, height: H },

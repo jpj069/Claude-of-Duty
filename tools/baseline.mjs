@@ -18,6 +18,7 @@
  *   node tools/baseline.mjs --out=shots/base --port=8080
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -50,11 +51,7 @@ if (!(await portOpen(PORT))) {
   if (!up) { server.kill(); throw new Error('vite failed to start'); }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--use-angle=metal', '--ignore-gpu-blocklist', '--force-color-profile=srgb',
-         '--force-device-scale-factor=1', '--hide-scrollbars', '--mute-audio', '--disable-frame-rate-limit'],
-});
+const browser = await chromium.launch(launchOptions(['--force-device-scale-factor=1', '--mute-audio', '--disable-frame-rate-limit']));
 
 mkdirSync(OUTDIR, { recursive: true });
 const report = { ok: true, outDir: OUTDIR, size: `${W}x${H}`, isolated: true, settle: SETTLE, shots: [], errors: [] };

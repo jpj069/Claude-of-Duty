@@ -16,6 +16,7 @@
  *   node tools/profile.mjs --port=8080 --dpr=2 --w=1512 --h=982
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { resolve } from 'node:path';
 
 const args = Object.fromEntries(process.argv.slice(2).map((a) => {
@@ -28,11 +29,7 @@ const H = Number(args.h ?? 982);
 const DPR = Number(args.dpr ?? 2);
 const FRAMES = Number(args.frames ?? 900);
 
-const browser = await chromium.launch({
-  headless: true,
-  args: ['--use-angle=metal', '--ignore-gpu-blocklist', '--mute-audio',
-         '--disable-frame-rate-limit', '--disable-gpu-vsync'],
-});
+const browser = await chromium.launch(launchOptions(['--mute-audio', '--disable-frame-rate-limit', '--disable-gpu-vsync']));
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: DPR });
 const errs = [];
 page.on('pageerror', (e) => errs.push(e.message));

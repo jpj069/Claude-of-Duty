@@ -5,6 +5,7 @@
  *   node src/materials/shoot.mjs --view=wall --out=/tmp/mat-wall.png --port=5202
  */
 import { chromium } from 'playwright';
+import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -48,17 +49,7 @@ if (!(await portOpen(PORT))) {
   }
 }
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [
-    '--use-angle=metal',
-    '--ignore-gpu-blocklist',
-    '--enable-gpu-rasterization',
-    '--disable-frame-rate-limit',
-    '--force-color-profile=srgb',
-    '--hide-scrollbars',
-  ],
-});
+const browser = await chromium.launch(launchOptions(['--disable-frame-rate-limit']));
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 const logs = [];
 page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
