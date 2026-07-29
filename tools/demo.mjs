@@ -25,6 +25,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { mkdirSync, existsSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -98,7 +99,7 @@ try {
   // but not a single frame of simulation. It is also what leaves the weapon in
   // debug mode and six staged mannequins in the level (both worked around in
   // the driver's begin(), but not paying for it at all is cleaner).
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1&lockstep=1&q=ultra&prewarm=0`, {
+  await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1&lockstep=1&q=ultra&prewarm=0`, {
     waitUntil: 'domcontentloaded',
     timeout: 180000,
   });

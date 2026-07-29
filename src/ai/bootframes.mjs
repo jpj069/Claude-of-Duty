@@ -13,6 +13,7 @@
  */
 import { chromium } from 'playwright';
 import { launchOptions } from '../../tools/chromium-launch.mjs';
+import { GAME_PATH } from '../../tools/game-url.mjs';
 const args = Object.fromEntries(process.argv.slice(2).map((a) => {
   const m = a.match(/^--([^=]+)(?:=(.*))?$/); return m ? [m[1], m[2] ?? true] : [a, true];
 }));
@@ -33,7 +34,7 @@ await page.addInitScript(() => {
       last = b;
     });
 });
-await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
 await page.waitForFunction('window.__READY__ === true', null, { timeout: 120000 });
 await page.evaluate((w) => new Promise((r) => setTimeout(r, w)), WAIT);
 const frames = await page.evaluate(() => window.__FRAMES__);

@@ -13,6 +13,7 @@
  */
 import { chromium } from 'playwright';
 import { launchOptions } from '../../tools/chromium-launch.mjs';
+import { GAME_PATH } from '../../tools/game-url.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).map((a) => {
   const m = a.match(/^--([^=]+)(?:=(.*))?$/); return m ? [m[1], m[2] ?? true] : [a, true];
@@ -25,7 +26,7 @@ const browser = await chromium.launch(launchOptions(['--mute-audio', '--disable-
 const page = await browser.newPage({ viewport: { width: 1512, height: 982 }, deviceScaleFactor: DPR });
 const errs = [];
 page.on('pageerror', (e) => errs.push(e.message));
-await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}`, { waitUntil: 'domcontentloaded', timeout: 90000 });
 await page.waitForFunction('window.__READY__ === true', null, { timeout: 120000 });
 
 await page.evaluate(() => {

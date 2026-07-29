@@ -23,6 +23,7 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from './game-url.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).map((a) => {
   const m = a.match(/^--([^=]+)(?:=(.*))?$/); return m ? [m[1], m[2] ?? true] : [a, true];
@@ -58,7 +59,7 @@ const report = { ok: true, outDir: OUTDIR, size: `${W}x${H}`, isolated: true, se
 
 // Discover the shot list from a throwaway page.
 const probe = await browser.newPage({ viewport: { width: W, height: H } });
-await probe.goto(`http://127.0.0.1:${PORT}/?capture=1&lockstep=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+await probe.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1&lockstep=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
 await probe.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
 const all = await probe.evaluate('Object.keys(window.__SHOTS__ ?? {})');
 await probe.close();
@@ -71,7 +72,7 @@ for (const name of wanted) {
   page.on('console', (m) => m.type() !== 'debug' && logs.push(`[${m.type()}] ${m.text()}`));
   page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
   try {
-    await page.goto(`http://127.0.0.1:${PORT}/?capture=1&lockstep=1&shot=${encodeURIComponent(name)}${EXTRA}`,
+    await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1&lockstep=1&shot=${encodeURIComponent(name)}${EXTRA}`,
       { waitUntil: 'domcontentloaded', timeout: 90000 });
     await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
 

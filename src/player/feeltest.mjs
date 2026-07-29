@@ -18,6 +18,7 @@ import { launchOptions } from '../../tools/chromium-launch.mjs';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import net from 'node:net';
+import { GAME_PATH } from '../../tools/game-url.mjs';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -59,7 +60,7 @@ page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
 let result = null;
 let failed = null;
 try {
-  await page.goto(`http://127.0.0.1:${PORT}/?capture=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
+  await page.goto(`http://127.0.0.1:${PORT}${GAME_PATH}?capture=1`, { waitUntil: 'domcontentloaded', timeout: 90000 });
   await page.waitForFunction('window.__READY__ === true', null, { timeout: 90000 });
   result = await page.evaluate(runBench);
 } catch (e) {

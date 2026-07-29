@@ -1,9 +1,10 @@
 import { chromium } from 'playwright';
 import { launchOptions } from './chromium-launch.mjs';
+import { GAME_PATH } from './game-url.mjs';
 const b = await chromium.launch(launchOptions(['--mute-audio', '--disable-frame-rate-limit']));
 const p = await b.newPage({ viewport:{width:1280,height:720} });
 const errs=[]; p.on('pageerror',e=>errs.push(e.message)); p.on('console',m=>m.type()==='error'&&errs.push(m.text()));
-await p.goto('http://127.0.0.1:8080/', {waitUntil:'domcontentloaded'});
+await p.goto('http://127.0.0.1:8080' + GAME_PATH, { waitUntil: 'domcontentloaded' });
 await p.waitForFunction('window.__READY__===true',null,{timeout:60000});
 const snap = () => p.evaluate(()=>{const e=window.__ENGINE__,c=e.camera.position;return{
   pos:[+c.x.toFixed(2),+c.y.toFixed(2),+c.z.toFixed(2)],
