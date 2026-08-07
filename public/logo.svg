@@ -1,35 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
      role="img" aria-label="Claude of Duty">
   <title>Claude of Duty</title>
-  <!-- Vector, not the generated raster: a mark has to sit on a transparent nav, a
-       16 px favicon and a light surface, and it has to stay ~1 KB. Studio was the
-       sketch step; this is the shipped artwork.
+  <!-- Vector, not the generated raster: the mark has to sit on a transparent nav,
+       a 16 px favicon and a light surface, and stay ~1 KB. Studio designed it;
+       this is the shipped artwork.
 
-       Second pass. The first version was a thin hexagon with a thin reticle inside
-       — two outlines of the same weight competing, which at 16 px collapsed into a
-       grey blob. Fixed by giving the shapes different jobs: the shield is now a
-       SOLID chevron block (mass, reads instantly at any size) and the reticle is
-       knocked OUT of it, so the mark has a figure and a ground instead of two
-       fighting contours. -->
+       Third pass, and the first one that means anything. The earlier marks were a
+       hexagon with a crosshair in it — decoration that could belong to any shooter.
+       This one is a stencilled C knocked out of a shield, and the C doubles as a
+       broken sight ring with the square as its aiming point. One shape, two
+       readings, and the letter is the project's own initial rather than a generic
+       reticle. -->
 
-  <!-- solid shield: pointy-top hex with a clipped lower vee, so it reads as a
-       chevron rather than a generic hexagon -->
   <mask id="cut">
-    <path d="M32 3 L57 17 L57 42 L32 61 L7 42 L7 17 Z" fill="#fff" />
-    <!-- knock the reticle out of the mass -->
-    <circle cx="32" cy="30" r="11.5" fill="none" stroke="#000" stroke-width="3.6" />
-    <g stroke="#000" stroke-width="3.6" stroke-linecap="butt">
-      <path d="M32 12.5 V23" />
-      <path d="M49.5 30 H39" />
-      <path d="M32 47.5 V37" />
-      <path d="M14.5 30 H25" />
-    </g>
-    <circle cx="32" cy="30" r="2.6" fill="#000" />
+    <!-- shield: flat top with chamfered shoulders, sides down, point at the bottom -->
+    <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#fff" />
+    <!-- the C, knocked out: ring open to the right, squared terminals -->
+    <path d="M37.3 21.5 A9.2 9.2 0 1 0 37.3 36.5"
+          stroke="#000" stroke-width="5.2" stroke-linecap="butt" fill="none" />
+    <!-- aiming point, also negative -->
+    <rect x="29.7" y="26.4" width="4.6" height="4.6" fill="#000" />
   </mask>
 
-  <path d="M32 3 L57 17 L57 42 L32 61 L7 42 L7 17 Z" fill="#FFC400" mask="url(#cut)" />
-
-  <!-- the centre dot returns as positive amber inside the knocked-out ring, which
-       is what keeps a target at the middle instead of a hole -->
-  <circle cx="32" cy="30" r="2.6" fill="#FFC400" />
+  <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#FFC400" mask="url(#cut)" />
 </svg>
