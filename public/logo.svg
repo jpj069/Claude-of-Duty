@@ -1,44 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
      role="img" aria-label="Claude of Duty">
   <title>Claude of Duty</title>
-  <!-- The small mark. Same brand as the hero lockup in /img/logo-lockup.webp —
-       shield plate, cloud emblem, three stars — reduced to shapes that survive a
-       16 px favicon. Vector rather than a downscale of the raster, which turns
-       to mush below ~48 px.
+  <!-- The small mark: the amber placard, with the unit emblem knocked out of it.
+       Same emblem as the hero lockup in /img/logo-lockup.webp, drawn as vector
+       because a downscale of the raster is mush below ~48 px and the favicon has
+       to hold at 16.
 
-       The palette does the work the detail cannot: the amber rim carries the
-       silhouette against a light tab bar, the cream cloud carries it against a
-       dark one. Neither alone is enough, which is why the earlier flat-amber
-       mark disappeared on the light theme.
+       The emblem is a delta whose lower half dissolves into a triangular mesh —
+       insignia geometry that also happens to be what the engine does, since this
+       game builds every surface out of generated geometry and ships no art.
 
-       Previous versions were a hexagon-with-crosshair and then a stencilled C,
-       both invented here. They no longer match anything: the brand is the cloud
-       on a shield, and the mark follows the lockup instead of competing with it. -->
+       It degrades in the right order. At 16 px the lattice and the keyline go
+       and what survives is an amber tile with a dark triangle in it, which is
+       still this mark and not a generic one. That is the whole reason the plate
+       is here rather than the wordmark: type at 16 px is mud.
 
-  <!-- plate -->
-  <path d="M19 8 H45 L51 14 V40 L32 56 L13 40 V14 Z" fill="#22261f" />
-  <path d="M19 8 H45 L51 14 V40 L32 56 L13 40 V14 Z"
-        stroke="#FFC400" stroke-width="3" stroke-linejoin="miter" />
+       Earlier marks — a crosshair hexagon, a stencilled C, a cloud on a shield —
+       were each invented for the favicon alone and matched nothing above them.
+       This one is taken from the lockup. -->
 
-  <!-- cloud: three bumps on a flat base, eyes and smile knocked out -->
-  <mask id="face">
-    <path d="M22.6 32.2 a5.2 5.2 0 0 1 1.1 -9.6 a6.6 6.6 0 0 1 12.3 -1.9
-             a5.6 5.6 0 0 1 5.4 11.5 Z" fill="#fff" />
-    <circle cx="28.4" cy="26.6" r="1.5" fill="#000" />
-    <circle cx="35.6" cy="26.6" r="1.5" fill="#000" />
-    <path d="M28.8 29.9 a4 4 0 0 0 6.4 0" stroke="#000" stroke-width="1.7"
-          stroke-linecap="round" fill="none" />
+  <mask id="knock">
+    <!-- placard -->
+    <path d="M13 8 H51 L58 15 V49 L51 56 H13 L6 49 V15 Z" fill="#fff" />
+
+    <!-- inner keyline, knocked out -->
+    <path d="M15.4 11.4 H48.6 L54.6 17.4 V46.6 L48.6 52.6 H15.4 L9.4 46.6 V17.4 Z"
+          stroke="#000" stroke-width="1.5" fill="none" />
+
+    <!-- emblem: solid upper delta -->
+    <path d="M23 19 H41 L32 33 Z" fill="#000" />
+    <!-- emblem: outer delta, open -->
+    <path d="M18 19 H46 L32 45 Z" stroke="#000" stroke-width="1.5"
+          stroke-linejoin="miter" fill="none" />
+    <!-- emblem: the mesh in the lower half -->
+    <g stroke="#000" stroke-width="1.2" stroke-linecap="butt">
+      <path d="M25.5 33 H38.5" />
+      <path d="M28.8 39 H35.2" />
+      <path d="M25.5 33 L35.2 39" />
+      <path d="M38.5 33 L28.8 39" />
+    </g>
   </mask>
-  <path d="M22.6 32.2 a5.2 5.2 0 0 1 1.1 -9.6 a6.6 6.6 0 0 1 12.3 -1.9
-           a5.6 5.6 0 0 1 5.4 11.5 Z" fill="#F2E4C9" mask="url(#face)" />
 
-  <!-- three stars, sitting on the shoulder line above the taper -->
-  <g fill="#FFC400">
-    <path d="M25 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
-             .33-1.91 -1.39-1.35 1.92-.28 Z" />
-    <path d="M32 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
-             .33-1.91 -1.39-1.35 1.92-.28 Z" />
-    <path d="M39 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
-             .33-1.91 -1.39-1.35 1.92-.28 Z" />
-  </g>
+  <path d="M13 8 H51 L58 15 V49 L51 56 H13 L6 49 V15 Z" fill="#FFC400" mask="url(#knock)" />
 </svg>

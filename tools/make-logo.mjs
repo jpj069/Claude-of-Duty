@@ -31,7 +31,12 @@ import { resolve, extname } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 
-const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
+const MIME = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+};
 const dataUrl = (rel) => {
   const p = resolve(ROOT, rel);
   return `data:${MIME[extname(p)]};base64,${readFileSync(p).toString('base64')}`;
@@ -49,9 +54,11 @@ const JOBS = [
   { src: 'assets/brand/lockup-square.jpg', out: 'public/img/logo-lockup.webp', width: 1120, q: 0.9 },
   // Wide lockup: the OG card and the boot screen. Rendered at up to 640 CSS px.
   { src: 'assets/brand/lockup-wide.jpg', out: 'public/img/logo-wide.webp', width: 1280, q: 0.9 },
-  // Touch / PWA icon. Squared around the emblem so it survives a mask, and PNG
-  // because apple-touch-icon is the one place WebP is still not accepted.
-  { src: 'assets/brand/badge.jpg', out: 'public/icon-512.png', width: 512, square: true },
+  // Touch / PWA icon: rasterised from the shipped SVG rather than from its own
+  // generated source, so the home-screen tile and the favicon cannot drift apart.
+  // PNG because apple-touch-icon is the one place WebP is still not accepted, and
+  // on an opaque tile because iOS composites a transparent one onto white.
+  { svg: 'public/logo.svg', out: 'public/icon-512.png', width: 512, bg: '#0d1015', pad: 0.1 },
 ];
 
 /**
@@ -170,12 +177,40 @@ const derive = ([src, opts]) =>
     img.src = src;
   });
 
+/**
+ * The icon path: no keying, no trim. An SVG has no black field to remove, and
+ * its own margins are already the ones the author drew.
+ */
+const raster = ([src, opts]) =>
+  new Promise((done, fail) => {
+    const img = new Image();
+    img.onerror = () => fail(new Error('svg decode failed'));
+    img.onload = () => {
+      const s = opts.width;
+      const c = Object.assign(document.createElement('canvas'), { width: s, height: s });
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = opts.bg;
+      ctx.fillRect(0, 0, s, s);
+      const inset = Math.round(s * opts.pad);
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, inset, inset, s - inset * 2, s - inset * 2);
+      done({ url: c.toDataURL('image/png'), w: s, h: s, from: 'svg' });
+    };
+    // A bare SVG data URL has no intrinsic pixel size in some paths; give the
+    // decoder the size we want it rasterised at.
+    img.width = opts.width;
+    img.height = opts.width;
+    img.src = src;
+  });
+
 const browser = await chromium.launch(launchOptions());
 const page = await browser.newPage();
 await page.goto('about:blank');
 
 for (const job of JOBS) {
-  const r = await page.evaluate(derive, [dataUrl(job.src), job]);
+  const r = job.svg
+    ? await page.evaluate(raster, [dataUrl(job.svg), job])
+    : await page.evaluate(derive, [dataUrl(job.src), job]);
   const abs = resolve(ROOT, job.out);
   writeFileSync(abs, Buffer.from(r.url.split(',')[1], 'base64'));
   const kb = (statSync(abs).size / 1024).toFixed(0);

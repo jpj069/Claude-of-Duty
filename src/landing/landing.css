@@ -302,7 +302,7 @@ code {
   line-height: 1;
 }
 .hero-mark img {
-  width: clamp(186px, 23vw, 292px);
+  width: clamp(186px, 23vw, 330px);
   height: auto;
   margin-inline: auto;
   filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
