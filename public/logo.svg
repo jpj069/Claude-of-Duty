@@ -1,26 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
      role="img" aria-label="Claude of Duty">
   <title>Claude of Duty</title>
-  <!-- Vector, not the generated raster: the mark has to sit on a transparent nav,
-       a 16 px favicon and a light surface, and stay ~1 KB. Studio designed it;
-       this is the shipped artwork.
+  <!-- The small mark: the amber placard, with the unit emblem knocked out of it.
+       Same emblem as the hero lockup in /img/logo-lockup.webp, drawn as vector
+       because a downscale of the raster is mush below ~48 px and the favicon has
+       to hold at 16.
 
-       Third pass, and the first one that means anything. The earlier marks were a
-       hexagon with a crosshair in it — decoration that could belong to any shooter.
-       This one is a stencilled C knocked out of a shield, and the C doubles as a
-       broken sight ring with the square as its aiming point. One shape, two
-       readings, and the letter is the project's own initial rather than a generic
-       reticle. -->
+       The emblem is a delta whose lower half dissolves into a triangular mesh —
+       insignia geometry that also happens to be what the engine does, since this
+       game builds every surface out of generated geometry and ships no art.
 
-  <mask id="cut">
-    <!-- shield: flat top with chamfered shoulders, sides down, point at the bottom -->
-    <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#fff" />
-    <!-- the C, knocked out: ring open to the right, squared terminals -->
-    <path d="M37.3 21.5 A9.2 9.2 0 1 0 37.3 36.5"
-          stroke="#000" stroke-width="5.2" stroke-linecap="butt" fill="none" />
-    <!-- aiming point, also negative -->
-    <rect x="29.7" y="26.4" width="4.6" height="4.6" fill="#000" />
+       It degrades in the right order. At 16 px the lattice and the keyline go
+       and what survives is an amber tile with a dark triangle in it, which is
+       still this mark and not a generic one. That is the whole reason the plate
+       is here rather than the wordmark: type at 16 px is mud.
+
+       Earlier marks — a crosshair hexagon, a stencilled C, a cloud on a shield —
+       were each invented for the favicon alone and matched nothing above them.
+       This one is taken from the lockup. -->
+
+  <mask id="knock">
+    <!-- placard -->
+    <path d="M13 8 H51 L58 15 V49 L51 56 H13 L6 49 V15 Z" fill="#fff" />
+
+    <!-- inner keyline, knocked out -->
+    <path d="M15.4 11.4 H48.6 L54.6 17.4 V46.6 L48.6 52.6 H15.4 L9.4 46.6 V17.4 Z"
+          stroke="#000" stroke-width="1.5" fill="none" />
+
+    <!-- emblem: solid upper delta -->
+    <path d="M23 19 H41 L32 33 Z" fill="#000" />
+    <!-- emblem: outer delta, open -->
+    <path d="M18 19 H46 L32 45 Z" stroke="#000" stroke-width="1.5"
+          stroke-linejoin="miter" fill="none" />
+    <!-- emblem: the mesh in the lower half -->
+    <g stroke="#000" stroke-width="1.2" stroke-linecap="butt">
+      <path d="M25.5 33 H38.5" />
+      <path d="M28.8 39 H35.2" />
+      <path d="M25.5 33 L35.2 39" />
+      <path d="M38.5 33 L28.8 39" />
+    </g>
   </mask>
 
-  <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#FFC400" mask="url(#cut)" />
+  <path d="M13 8 H51 L58 15 V49 L51 56 H13 L6 49 V15 Z" fill="#FFC400" mask="url(#knock)" />
 </svg>

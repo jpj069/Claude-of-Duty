@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon-512.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
     <title>CLAUDE OF DUTY — a browser FPS with no art assets</title>
@@ -27,7 +28,10 @@
     <meta property="og:image" content="https://claude-of-duty.com/img/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="In-engine view down the market street in CLAUDE OF DUTY" />
+    <meta
+      property="og:image:alt"
+      content="The CLAUDE OF DUTY logo over an in-engine view down the market street"
+    />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -38,8 +42,10 @@
     />
     <meta name="twitter:image" content="https://claude-of-duty.com/img/og.jpg" />
 
-    <!-- The hero image is the largest contentful paint; fetch it with the document. -->
+    <!-- Both hero layers are above the fold and both are contentful-paint
+         candidates; fetch them with the document rather than after the CSS. -->
     <link rel="preload" as="image" href="/img/keyart.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/img/logo-lockup.webp" fetchpriority="high" />
 
     <script type="application/ld+json">
       {
@@ -93,9 +99,17 @@
         <div class="hero-layer hero-veil" aria-hidden="true"></div>
         <div class="hero-inner" data-parallax="-0.06">
           <p class="eyebrow center reveal">BROWSER-NATIVE · WEBGL2 · NOTHING TO INSTALL</p>
-          <h1 class="reveal">
-            <span>CLAUDE</span>
-            <span class="accent">OF DUTY</span>
+          <!-- The lockup is the h1: it is the page's heading, so it stays an h1
+               with the wordmark in `alt` rather than becoming a decorative image
+               next to a hidden text heading. -->
+          <h1 class="hero-mark reveal">
+            <img
+              src="/img/logo-lockup.webp"
+              alt="CLAUDE OF DUTY"
+              width="794"
+              height="838"
+              fetchpriority="high"
+            />
           </h1>
           <p class="lede reveal">
             A first-person shooter that ships <strong>no art assets at all</strong>.

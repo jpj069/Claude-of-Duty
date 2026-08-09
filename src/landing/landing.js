@@ -44,7 +44,23 @@ if (reduced || !hasIO) {
     });
   }
 
-  revealables.forEach((el) => io.observe(el));
+  // The hero is the first screen, so its reveals are an intro sequence, not a
+  // scroll effect — run them on load and never observe them.
+  //
+  // Observing them made the hero depend on viewport height in a way that is
+  // easy to miss: the observer's -12% bottom rootMargin puts the trigger line
+  // at 88% of the screen, and anything the hero pushes below that line loads
+  // invisible and only appears once the user scrolls past it. The fine print
+  // under the buttons sat exactly there on a 900 px screen.
+  const intro = [...document.querySelectorAll('.hero .reveal')];
+  intro.forEach((el, i) => {
+    el.style.transitionDelay = `${80 + i * 90}ms`;
+  });
+  requestAnimationFrame(() => intro.forEach((el) => el.classList.add('in')));
+
+  revealables.forEach((el) => {
+    if (!intro.includes(el)) io.observe(el);
+  });
 }
 
 /* ---------------- count-up figures ----------------

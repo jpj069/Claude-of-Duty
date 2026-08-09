@@ -209,6 +209,12 @@ a { color: inherit; }
   flex: none;
 }
 .eyebrow.center { justify-content: center; }
+/* Once the label wraps, the leading rule is left behind on the first line while
+   the text centres under it, and it reads as a stray mark rather than a lead-in.
+   Drop it at the width where the wrap starts. */
+@media (max-width: 720px) {
+  .eyebrow.center::before { display: none; }
+}
 
 h1 {
   display: flex;
@@ -258,7 +264,11 @@ code {
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 130px var(--gut) 96px;
+  /* The lockup is ~120 px taller than the typeset heading it replaced, which is
+     the whole hero's fold budget on a 900 px screen. Bought back here, in the
+     lede's measure and in the mark's cap — the alternative is a hero that
+     scrolls before it has said anything. */
+  padding: 112px var(--gut) 84px;
   isolation: isolate;
 }
 .hero-layer { position: absolute; inset: 0; z-index: -1; }
@@ -281,11 +291,33 @@ code {
   text-align: center;
   will-change: transform;
 }
+/* The hero heading is the lockup raster, so none of the h1 type rules apply —
+   reset the flex column and let the image set the box. Width is capped well
+   below the asset's 724 px so it never upscales; the art is dense enough that
+   any resample past 1:1 shows. */
+.hero-mark {
+  display: block;
+  margin: clamp(10px, 1.8vw, 22px) 0 0;
+  letter-spacing: normal;
+  line-height: 1;
+}
+.hero-mark img {
+  width: clamp(186px, 23vw, 330px);
+  height: auto;
+  margin-inline: auto;
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.5));
+}
 .lede {
   max-width: 56ch;
   margin: 26px auto 0;
   color: var(--ink-2);
   font-size: clamp(16px, 2vw, 21px);
+}
+/* Two lines under the mark, not three: the hero has a lockup carrying the name
+   now, so the sentence is support and does not need the full measure. */
+.hero .lede {
+  max-width: 64ch;
+  margin-top: 22px;
 }
 .cta-row {
   display: flex;

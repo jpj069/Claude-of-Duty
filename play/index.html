@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon-512.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <title>Play CLAUDE OF DUTY — browser FPS, nothing to install</title>
     <meta
@@ -50,14 +51,13 @@
         transition: opacity 0.5s ease;
       }
       #boot.done { opacity: 0; pointer-events: none; }
+      /* The wide lockup rather than the square one: this sits above a progress
+         bar and a status line, so the mark has to spend its budget on width. */
       .boot-mark {
-        font-size: clamp(28px, 6vw, 62px);
-        font-weight: 200;
-        letter-spacing: 0.34em;
-        line-height: 1;
-        color: var(--ink);
-        text-align: center;
-        text-indent: 0.34em;
+        display: block;
+        width: clamp(240px, 52vw, 520px);
+        height: auto;
+        margin: 0 auto;
       }
       .boot-sub {
         margin-top: 14px;
@@ -133,9 +133,8 @@
 
     <div id="boot" role="status" aria-live="polite">
       <div>
-        <img src="/logo.svg" alt="" width="64" height="64"
-             style="width:64px;height:64px;margin:0 auto 22px;display:block" />
-        <div class="boot-mark">CLAUDE OF DUTY</div>
+        <img class="boot-mark" src="/img/logo-wide.webp" alt="CLAUDE OF DUTY"
+             width="1280" height="603" fetchpriority="high" />
         <div class="boot-sub">BUILDING THE WORLD</div>
       </div>
       <div class="boot-track"><div class="boot-fill" id="boot-fill"></div></div>
