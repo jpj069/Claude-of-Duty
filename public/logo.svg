@@ -1,26 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
      role="img" aria-label="Claude of Duty">
   <title>Claude of Duty</title>
-  <!-- Vector, not the generated raster: the mark has to sit on a transparent nav,
-       a 16 px favicon and a light surface, and stay ~1 KB. Studio designed it;
-       this is the shipped artwork.
+  <!-- The small mark. Same brand as the hero lockup in /img/logo-lockup.webp —
+       shield plate, cloud emblem, three stars — reduced to shapes that survive a
+       16 px favicon. Vector rather than a downscale of the raster, which turns
+       to mush below ~48 px.
 
-       Third pass, and the first one that means anything. The earlier marks were a
-       hexagon with a crosshair in it — decoration that could belong to any shooter.
-       This one is a stencilled C knocked out of a shield, and the C doubles as a
-       broken sight ring with the square as its aiming point. One shape, two
-       readings, and the letter is the project's own initial rather than a generic
-       reticle. -->
+       The palette does the work the detail cannot: the amber rim carries the
+       silhouette against a light tab bar, the cream cloud carries it against a
+       dark one. Neither alone is enough, which is why the earlier flat-amber
+       mark disappeared on the light theme.
 
-  <mask id="cut">
-    <!-- shield: flat top with chamfered shoulders, sides down, point at the bottom -->
-    <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#fff" />
-    <!-- the C, knocked out: ring open to the right, squared terminals -->
-    <path d="M37.3 21.5 A9.2 9.2 0 1 0 37.3 36.5"
-          stroke="#000" stroke-width="5.2" stroke-linecap="butt" fill="none" />
-    <!-- aiming point, also negative -->
-    <rect x="29.7" y="26.4" width="4.6" height="4.6" fill="#000" />
+       Previous versions were a hexagon-with-crosshair and then a stencilled C,
+       both invented here. They no longer match anything: the brand is the cloud
+       on a shield, and the mark follows the lockup instead of competing with it. -->
+
+  <!-- plate -->
+  <path d="M19 8 H45 L51 14 V40 L32 56 L13 40 V14 Z" fill="#22261f" />
+  <path d="M19 8 H45 L51 14 V40 L32 56 L13 40 V14 Z"
+        stroke="#FFC400" stroke-width="3" stroke-linejoin="miter" />
+
+  <!-- cloud: three bumps on a flat base, eyes and smile knocked out -->
+  <mask id="face">
+    <path d="M22.6 32.2 a5.2 5.2 0 0 1 1.1 -9.6 a6.6 6.6 0 0 1 12.3 -1.9
+             a5.6 5.6 0 0 1 5.4 11.5 Z" fill="#fff" />
+    <circle cx="28.4" cy="26.6" r="1.5" fill="#000" />
+    <circle cx="35.6" cy="26.6" r="1.5" fill="#000" />
+    <path d="M28.8 29.9 a4 4 0 0 0 6.4 0" stroke="#000" stroke-width="1.7"
+          stroke-linecap="round" fill="none" />
   </mask>
+  <path d="M22.6 32.2 a5.2 5.2 0 0 1 1.1 -9.6 a6.6 6.6 0 0 1 12.3 -1.9
+           a5.6 5.6 0 0 1 5.4 11.5 Z" fill="#F2E4C9" mask="url(#face)" />
 
-  <path d="M19 11 H45 L49 16 V36 L32 53 L15 36 V16 Z" fill="#FFC400" mask="url(#cut)" />
+  <!-- three stars, sitting on the shoulder line above the taper -->
+  <g fill="#FFC400">
+    <path d="M25 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
+             .33-1.91 -1.39-1.35 1.92-.28 Z" />
+    <path d="M32 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
+             .33-1.91 -1.39-1.35 1.92-.28 Z" />
+    <path d="M39 37.2 l.86 1.74 1.92.28 -1.39 1.35.33 1.91 -1.72-.9 -1.72.9
+             .33-1.91 -1.39-1.35 1.92-.28 Z" />
+  </g>
 </svg>

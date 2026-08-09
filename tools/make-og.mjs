@@ -1,20 +1,26 @@
 #!/usr/bin/env node
 /**
- * Compose the 1200x630 Open Graph card.
+ * Compose the 1200x630 Open Graph card: a real in-engine still, veiled, with
+ * the brand lockup over it. This is the first thing anyone sees of the project
+ * in a link preview, so the still is a capture and not concept art.
  *
- * Built from a real in-engine still with the wordmark typeset locally, rather
- * than generated: a model asked for text produces text that drifts — near-miss
- * letterforms and wrong kerning — and this image is the first thing anyone sees
- * of the project in a link preview.
+ * The wordmark used to be typeset here in CSS, on the grounds that a model
+ * asked for text returns text that drifts. That is still true in general — it
+ * is just no longer relevant, because the lockup is now a fixed asset whose
+ * spelling was checked once, by eye, at full size. Compositing it beats
+ * re-typesetting an approximation of it.
  *
  *   node tools/make-og.mjs
  */
 import { chromium } from 'playwright';
+import { launchOptions } from './chromium-launch.mjs';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
-const still = readFileSync(resolve(ROOT, 'public/img/still-street.jpg')).toString('base64');
+const b64 = (rel) => readFileSync(resolve(ROOT, rel)).toString('base64');
+const still = b64('public/img/still-street.jpg');
+const lockup = b64('public/img/logo-wide.webp');
 
 const html = `<!doctype html><meta charset="utf-8">
 <style>
@@ -30,10 +36,9 @@ const html = `<!doctype html><meta charset="utf-8">
   .inner { position:absolute; inset:0; padding:74px 78px;
            display:flex; flex-direction:column; justify-content:center; gap:22px; }
   .eyebrow { font:600 17px/1 ui-monospace,Menlo,monospace; letter-spacing:.3em; color:#ffc400; }
-  .mark { font-weight:200; font-size:94px; line-height:.92; letter-spacing:.05em;
-          color:#f4f6f8; text-transform:uppercase; }
-  .mark b { display:block; font-weight:200; color:#ffc400; }
-  .sub { max-width:26ch; font-size:26px; line-height:1.35; font-weight:300; color:#c3cad3; }
+  .mark { display:block; width:600px; height:auto;
+          filter:drop-shadow(0 14px 30px rgba(0,0,0,.6)); }
+  .sub { max-width:30ch; font-size:26px; line-height:1.35; font-weight:300; color:#c3cad3; }
   .rule { width:78px; height:3px; background:#ffc400; }
 </style>
 <div class="card">
@@ -41,16 +46,13 @@ const html = `<!doctype html><meta charset="utf-8">
   <div class="veil"></div>
   <div class="inner">
     <div class="eyebrow">BROWSER FPS &middot; WEBGL2</div>
-    <div class="mark">Claude<b>of Duty</b></div>
+    <img class="mark" src="data:image/webp;base64,${lockup}" alt="">
     <div class="rule"></div>
     <div class="sub">A shooter that ships no art assets. Everything is generated at load time.</div>
   </div>
 </div>`;
 
-const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM_PATH ?? undefined,
-  args: ['--no-sandbox'],
-});
+const browser = await chromium.launch(launchOptions(['--no-sandbox']));
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
 await page.setContent(html, { waitUntil: 'load' });
 await page.evaluate(() => document.fonts.ready);
